@@ -11,3 +11,13 @@ class LoRADecorator(nn.Module):
         x_module = self.module(x)
         x_lora = self.lora(x)
         return x_module + x_lora 
+    
+    def __getattr__(self, name):  
+        try:  
+            return self.lora.__getattr__(name)  
+        except AttributeError:  
+            return getattr(self.module, name)  
+
+    @property
+    def weight(self):
+        return self.module.weight
