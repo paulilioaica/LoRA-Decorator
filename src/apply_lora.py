@@ -1,4 +1,4 @@
-from lora import LoRALayer
+from lora import LoRADecorator
 import torch.nn as nn
 from functools import reduce
 
@@ -16,8 +16,8 @@ def apply_lora(model, rank, alpha):
             name_child = name.split('.')[-1] 
             if name_child[-1].isdigit():
                 name_child = name_child[:-1]
-            if name_child  in lora_to_replace and not isinstance(layer, LoRALayer):
-                new_layer = LoRALayer(rank, layer.in_features, layer.out_features, alpha)  
+            if name_child  in lora_to_replace and not isinstance(layer, LoRADecorator):
+                new_layer = LoRADecorator(rank, layer.in_features, layer.out_features, alpha)  
                 # get the parent module  
                 parent_name, child_name = name.rsplit('.', 1)  
                 parent_module = reduce(getattr, parent_name.split('.'), model)  
